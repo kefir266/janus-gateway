@@ -5619,12 +5619,7 @@ static int janus_streaming_rtsp_connect_to_server(janus_streaming_mountpoint *mp
 		if(header == NULL)
 			header = strstr(curldata->buffer, "transport:");
 		if(header != NULL) {
-			char *end = strchr(header, '\r');
-			if(end != NULL)
-				*end = '\0';
-			end = strchr(header, '\n');
-			if(end != NULL)
-				*end = '\0';
+			char *end = strchr(header, '\n');
 			/* Iterate on all params */
 			char *p = header, param[100], *pi = NULL;
 			int read = 0;
@@ -5660,7 +5655,7 @@ static int janus_streaming_rtsp_connect_to_server(janus_streaming_mountpoint *mp
 				}
 				/* Move to the next param */
 				p += read;
-				if(*p != ';')
+				if(p >= end)
 					break;
 				while(*p == ';')
 					p++;
@@ -5671,12 +5666,7 @@ static int janus_streaming_rtsp_connect_to_server(janus_streaming_mountpoint *mp
 		if(header == NULL)
 			header = strstr(curldata->buffer, "session:");
 		if(header != NULL) {
-			char *end = strchr(header, '\r');
-			if(end != NULL)
-				*end = '\0';
-			end = strchr(header, '\n');
-			if(end != NULL)
-				*end = '\0';
+			char *end = strchr(header, '\n');
 			/* Iterate on all params */
 			char *p = header, param[100], *pi = NULL;
 			int read = 0;
@@ -5700,7 +5690,7 @@ static int janus_streaming_rtsp_connect_to_server(janus_streaming_mountpoint *mp
 				}
 				/* Move to the next param */
 				p += read;
-				if(*p != ';')
+				if(p >= end)
 					break;
 				while(*p == ';')
 					p++;
